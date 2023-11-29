@@ -49,7 +49,7 @@ for cid in $containerID; do
                 for hpid in $listofpidsOnHostwithContainerPISNS; do
                         checkCpidOnHost=$(cat /proc/$hpid/status | grep NSpid | awk '{print $3}')
                         if [[ " ${pid_array[*]} " =~ "$checkCpidOnHost" ]]; then
-                                echo "process on host is same as on container"
+                                echo "process on host $checkCpidOnHost is same as on container"
                         else
                                 echo "container escapes as the process on host dont match with the process in the container"
                         fi
