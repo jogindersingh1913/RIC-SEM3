@@ -7,7 +7,7 @@ echo $containerID
 for cid in $containerID; do
         echo "============================================================================================================"
         echo "container id : $cid"
-        ns=$(docker exec -it $cid  bash -c "lsns -t pid"| awk 'NR>1')
+        ns=$(docker exec  $cid  bash -c "lsns -t pid"| awk 'NR>1')
         echo $ns
         # Count the number of namespaces
         namespace=$(echo $ns|awk '{print $1}')
@@ -18,13 +18,13 @@ for cid in $containerID; do
                 echo "Container $cid  may have escaped! More than one namespace found"
         else
                 #check all the child process are of same ns as parent pid ns
-                list_of_all_child_pids=$(docker exec -it $cid bash -c "ps -e -o pidns,pid" | awk 'NR>1' | head -n -1 | grep - | awk '{print $2}')
+                list_of_all_child_pids=$(docker exec  $cid bash -c "ps -e -o pidns,pid" | awk 'NR>1' | head -n -1 | grep - | awk '{print $2}')
                 echo "list of all cpids  == $list_of_all_child_pids"
                 if [ -n "$list_of_all_child_pids" ] && [ -n "$(echo "$list_of_all_child_pids" | tr -d '[:space:]')" ]; then
                         for cpid in $list_of_all_child_pids; do
                                 cpid=$(echo "$cpid"| sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-                                getPpid=$(docker exec -it $cid bash -c "cat /proc/$cpid/status"| grep PPid |cut -d':' -f2 |sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-                                PpidNs=$(docker exec -it $cid bash -c "ps -p $getPpid -o pidns,pid" | awk 'NR>1' | awk '{print $1}')
+                                getPpid=$(docker exec  $cid bash -c "cat /proc/$cpid/status"| grep PPid |cut -d':' -f2 |sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+                                PpidNs=$(docker exec  $cid bash -c "ps -p $getPpid -o pidns,pid" | awk 'NR>1' | awk '{print $1}')
                                 echo "getPPid is $getPpid"
                                 if [ "$namespace" == "$PpidNs" ]; then
                                         echo "childPID $cpid which belongs to parentPID $getPpid has the same PIDnamespace"
@@ -34,7 +34,7 @@ for cid in $containerID; do
                                 fi
                         done
                 fi
-                listofPidsinContainer=$(docker exec -it $cid bash -c "ps -e -o pidns,pid"| awk 'NR>1'| awk '{print $2}')
+                listofPidsinContainer=$(docker exec  $cid bash -c "ps -e -o pidns,pid"| awk 'NR>1'| awk '{print $2}')
                 echo "list of pids in container ::  $listofPidsinContainer"
 
                 # Initialize an array
