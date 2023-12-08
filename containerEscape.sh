@@ -52,6 +52,7 @@ for cid in $containerID; do
                                 echo "process on host is same as on container, so container is safe"
                         else
                                 echo "container escapes as the process on host dont match with the process in the container"
+                                exit 1
                         fi
                         done
         fi
