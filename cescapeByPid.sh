@@ -6,6 +6,7 @@ check_pid_namespace() {
     local container_id=$1
 
     log "============================================================================================================"
+    log "1"
     log "Checking Container ID: $container_id"
 
     ns=$(docker exec "$container_id" bash -c "lsns -t pid" | awk 'NR>1')
@@ -80,7 +81,8 @@ check_cpid_on_host() {
     local pid_array=("${@:3}")
 
     checkCpidOnHost=$(cat /proc/"$hpid"/status | grep NSpid | awk '{print $3}')
-
+    log "$checkCpidOnHost"
+    log "${pid_array[*]} "
     if [[ " ${pid_array[*]} " =~ "$checkCpidOnHost" ]]; then
         log "Process on host $checkCpidOnHost is the same as in container $container_id"
     else
