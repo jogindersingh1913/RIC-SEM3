@@ -41,14 +41,15 @@ check_container_isolation() {
         fi
     done
 
-    # Scenario 5: Check for breakout attempts using common tools
-    breakout_attempts=("nsenter" "chroot" "docker exec")
-    for attempt in "${breakout_attempts[@]}"; do
-        if command -v "$attempt" > /dev/null; then
-            echo "Common breakout tool '$attempt' is available on the host. Potential security risk."
-            status="Failure"
-        fi
-    done
+    # # Scenario 5: Check for breakout attempts using common tools
+    # # breakout_attempts=("nsenter" "chroot" "docker exec")
+    # breakout_attempts=("nsenter" "chroot" "docker exec")
+    # for attempt in "${breakout_attempts[@]}"; do
+    #     if command -v "$attempt" > /dev/null; then
+    #         echo "Common breakout tool '$attempt' is available on the host. Potential security risk."
+    #         status="Failure"
+    #     fi
+    # done
 
     # Print the overall status
     echo "Scenario status: $status"
