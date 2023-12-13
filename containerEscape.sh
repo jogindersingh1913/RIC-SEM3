@@ -57,6 +57,7 @@ for cid in $containerID; do
                         fi
                     else
                         echo "container escapes as there is no such file /proc/$hpid/status"
+                        exit 1
                     fi
                 done
         fi
