@@ -47,13 +47,17 @@ for cid in $containerID; do
 
                 listofpidsOnHostwithContainerPISNS=$(ps -e -o pidns,pid|grep $namespace | awk '{print $2}')
                 for hpid in $listofpidsOnHostwithContainerPISNS; do
+                    # Check if the status file exists
+                    if [ -e "/proc/$hpid/status" ]; then
                         checkCpidOnHost=$(cat /proc/$hpid/status | grep NSpid | awk '{print $3}')
                         if [[ " ${pid_array[*]} " =~ "$checkCpidOnHost" ]]; then
-                                echo "process on host is same as on container, so container is safe"
+                            echo "process on host is the same as on the container, so container is safe"
                         else
-                                echo "container escapes as the process on host dont match with the process in the container"
-                                exit 1
+                            echo "container escapes as the process on the host doesn't match with the process in the container"
                         fi
-                        done
+                    else
+                        echo "container escapes as there is no such file /proc/$hpid/status"
+                    fi
+                done
         fi
         done
